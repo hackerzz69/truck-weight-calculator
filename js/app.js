@@ -1,95 +1,195 @@
-const steerInput = document.getElementById("steer");
-const sdInput = document.getElementById("steerDrive");
-const tandemInput = document.getElementById("tandem");
+const tabs =
+document.querySelectorAll(".tab");
 
-const driveResult = document.getElementById("driveResult");
-const grossResult = document.getElementById("grossResult");
-const legalResults = document.getElementById("legalResults");
+function showMode(mode){
 
-function calculate() {
+document
+.getElementById("splitMode")
+.classList.add("hidden");
 
-const steer = Number(steerInput.value) || 0;
-const sd = Number(sdInput.value) || 0;
-const tandem = Number(tandemInput.value) || 0;
+document
+.getElementById("catMode")
+.classList.add("hidden");
 
-const drive = sd - steer;
-const gross = steer + drive + tandem;
+document
+.getElementById("reverseMode")
+.classList.add("hidden");
 
-driveResult.textContent =
+tabs.forEach(
+t=>t.classList.remove("active")
+);
+
+if(mode==="split"){
+
+document
+.getElementById("splitMode")
+.classList.remove("hidden");
+
+tabs[0].classList.add("active");
+
+}
+
+if(mode==="cat"){
+
+document
+.getElementById("catMode")
+.classList.remove("hidden");
+
+tabs[1].classList.add("active");
+
+}
+
+if(mode==="reverse"){
+
+document
+.getElementById("reverseMode")
+.classList.remove("hidden");
+
+tabs[2].classList.add("active");
+
+}
+
+calculate();
+}
+
+function calculate(){
+
+let steer=0;
+let drive=0;
+let tandem=0;
+let gross=0;
+
+if(
+!document
+.getElementById("splitMode")
+.classList.contains("hidden")
+){
+
+steer=
+Number(splitSteer.value)||0;
+
+const sd=
+Number(splitSD.value)||0;
+
+tandem=
+Number(splitTandem.value)||0;
+
+drive=
+sd-steer;
+
+gross=
+steer+drive+tandem;
+}
+
+if(
+!document
+.getElementById("catMode")
+.classList.contains("hidden")
+){
+
+steer=
+Number(catSteer.value)||0;
+
+drive=
+Number(catDrive.value)||0;
+
+tandem=
+Number(catTandem.value)||0;
+
+gross=
+steer+drive+tandem;
+}
+
+if(
+!document
+.getElementById("reverseMode")
+.classList.contains("hidden")
+){
+
+steer=
+Number(revSteer.value)||0;
+
+const sd=
+Number(revSD.value)||0;
+
+gross=
+Number(revGross.value)||0;
+
+drive=
+sd-steer;
+
+tandem=
+gross-sd;
+}
+
+driveResult.textContent=
 drive.toLocaleString();
 
-grossResult.textContent =
+grossResult.textContent=
 gross.toLocaleString();
 
-buildLegal(
+remaining.textContent=
+(80000-gross)
+.toLocaleString();
+
+legal(
 steer,
 drive,
 tandem,
 gross
 );
-
 }
 
-function createRow(name, value, limit){
+function row(
+name,
+value,
+limit
+){
 
-const percent =
+const pct=
 Math.min(
-(value / limit) * 100,
+(value/limit)*100,
 100
 );
 
-let colorClass = "";
+let color="green";
 
-if(value > limit){
-
-colorClass = "red";
-
-}else if(limit - value < 500){
-
-colorClass = "yellow";
-
+if(value>limit){
+color="red";
 }
-
-const diff =
-limit - value;
+else if(limit-value<500){
+color="yellow";
+}
 
 return `
-<div class="legal-row">
-
 <div>
+
 ${name}
-
-(${value.toLocaleString()} /
-${limit.toLocaleString()})
-
-${diff >= 0
-? `✅ ${diff.toLocaleString()} lbs under`
-: `❌ ${Math.abs(diff).toLocaleString()} lbs over`
-}
-
-</div>
+ (${value.toLocaleString()} / ${limit.toLocaleString()})
 
 <div class="bar">
+
 <div
-class="fill ${colorClass}"
-style="width:${percent}%">
+class="fill ${color}"
+style="width:${pct}%">
 </div>
+
 </div>
 
 </div>
 `;
 }
 
-function buildLegal(
+function legal(
 steer,
 drive,
 tandem,
 gross
 ){
 
-legalResults.innerHTML =
+legalResults.innerHTML=
 
-createRow(
+row(
 "Steer",
 steer,
 12000
@@ -97,7 +197,7 @@ steer,
 
 +
 
-createRow(
+row(
 "Drive",
 drive,
 34000
@@ -105,7 +205,7 @@ drive,
 
 +
 
-createRow(
+row(
 "Tandem",
 tandem,
 34000
@@ -113,7 +213,7 @@ tandem,
 
 +
 
-createRow(
+row(
 "Gross",
 gross,
 80000
@@ -121,11 +221,9 @@ gross,
 
 }
 
-[
-steerInput,
-sdInput,
-tandemInput
-].forEach(input=>{
+document
+.querySelectorAll("input")
+.forEach(input=>{
 
 input.addEventListener(
 "input",
@@ -135,3 +233,33 @@ calculate
 });
 
 calculate();
+
+let deferredPrompt;
+
+window.addEventListener(
+"beforeinstallprompt",
+e=>{
+
+e.preventDefault();
+
+deferredPrompt=e;
+
+installBtn.style.display=
+"block";
+
+});
+
+installBtn.addEventListener(
+"click",
+async()=>{
+
+if(!deferredPrompt)
+return;
+
+deferredPrompt.prompt();
+
+await deferredPrompt.userChoice;
+
+deferredPrompt=null;
+
+});
