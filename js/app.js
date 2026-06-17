@@ -263,3 +263,13 @@ await deferredPrompt.userChoice;
 deferredPrompt=null;
 
 });
+
+if(
+"serviceWorker"
+in navigator
+){
+
+navigator.serviceWorker
+.register("sw.js");
+
+}
