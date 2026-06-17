@@ -2,71 +2,127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Truck Weight Calculator</title>
 
 <link rel="stylesheet" href="css/styles.css">
 <link rel="manifest" href="manifest.json">
 
-<meta name="theme-color" content="#0f172a">
-</head>
+<meta name="theme-color" content="#2ef0b8">
 
+</head>
 <body>
 
-<div class="app">
+<div class="container">
 
 <header>
 
-<div class="logo">
-🚛 Truck Weight Calculator
-</div>
+<h1>🚛 Truck Weight Calculator</h1>
 
-<div class="tabs">
-<button class="tab active">Split Mode</button>
-<button class="tab">CAT Scale</button>
-</div>
+<button id="installBtn" class="install-btn">
+📲 Install App
+</button>
 
 </header>
+
+<div class="tabs">
+
+<button class="tab active" onclick="showMode('split')">
+Split Mode
+</button>
+
+<button class="tab" onclick="showMode('cat')">
+CAT Scale
+</button>
+
+<button class="tab" onclick="showMode('reverse')">
+Reverse CAT
+</button>
+
+</div>
 
 <div class="status">
 🟢 Auto Calculating
 </div>
 
-<div class="card input-card">
+<!-- SPLIT MODE -->
 
-<div class="field">
-<label>Steer</label>
-<input id="steer" type="number" placeholder="11600">
-</div>
+<div id="splitMode" class="card">
 
-<div class="field">
-<label>Steer + Drive</label>
-<input id="steerDrive" type="number" placeholder="44780">
-</div>
+<h2>Split Mode</h2>
 
-<div class="field">
-<label>Tandem</label>
-<input id="tandem" type="number" placeholder="33920">
-</div>
+<input id="splitSteer" placeholder="Steer">
+<input id="splitSD" placeholder="Steer + Drive">
+<input id="splitTandem" placeholder="Tandem">
 
 </div>
 
-<div class="results-grid">
+<!-- CAT -->
 
-<div class="metric-card">
-<div class="title">Drive Axle</div>
-<div id="driveResult" class="metric-value">0</div>
-</div>
+<div id="catMode" class="card hidden">
 
-<div class="metric-card gross">
-<div class="title">Gross Weight</div>
-<div id="grossResult" class="metric-value">0</div>
-</div>
+<h2>CAT Scale</h2>
+
+<input id="catSteer" placeholder="Steer">
+<input id="catDrive" placeholder="Drive">
+<input id="catTandem" placeholder="Tandem">
 
 </div>
 
-<div class="legal-card">
+<!-- REVERSE -->
+
+<div id="reverseMode" class="card hidden">
+
+<h2>Reverse CAT</h2>
+
+<input id="revSteer" placeholder="Steer">
+<input id="revSD" placeholder="Steer + Drive">
+<input id="revGross" placeholder="Gross">
+
+</div>
+
+<div class="results">
+
+<div class="metric">
+
+<div class="metric-title">
+Drive Axle
+</div>
+
+<div id="driveResult" class="metric-value">
+0
+</div>
+
+</div>
+
+<div class="metric">
+
+<div class="metric-title">
+Gross Weight
+</div>
+
+<div id="grossResult" class="metric-value purple">
+0
+</div>
+
+</div>
+
+</div>
+
+<div class="remaining">
+
+Remaining Capacity
+
+<span id="remaining">
+80,000
+</span>
+
+lbs
+
+</div>
+
+<div class="card">
 
 <h2>Legal Check</h2>
 
